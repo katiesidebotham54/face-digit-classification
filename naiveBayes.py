@@ -81,7 +81,8 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
         for i in range(len(trainingData)):
             label = trainingLabels[i]
             for k in self.kgrid:
-                featureCounts[label][k][trainingData[i][k]] += 1
+                featureCounts[label][k][self.features[k]
+                                        [trainingData[i][k]]] += 1
 
         # Calculate probabilities using Laplace smoothing
         for label in self.legalLabels:
@@ -107,7 +108,8 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
                 for label in self.legalLabels:
                     score = self.priors[label]
                     for j in range(len(validationData[i])):
-                        score *= self.featureCounts[label][j][validationData[i][j]]
+                        score *= self.featureCounts[label][j][self.features[j]
+                                                              [validationData[i][j]]]
                     scores[label] = score
                 if validationLabels[i] == scores.argMax():
                     accuracy += 1
@@ -169,9 +171,26 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
 
         Note: you may find 'self.features' a useful way to loop through all possible features
         """
+        # odds ratio: the ratio of the probability of a feature being 1 given label1
+        # and the probability of the same feature being 1 given label2.
         featuresOdds = []
+        # dict for storing odds ratio for each feature
+        odds_ratios = {}
+        for feature in self.features:
+            p_f_given_label1 = (
+                self.featureCounts[label1][feature] + 1) / (self.count[label1] + 2)
+            p_f_given_label2 = (
+                self.featureCounts[label2][feature] + 1) / (self.count[label2] + 2)
+            # calc odds ratio
+            odds_ratio = p_f_given_label1 / p_f_given_label2
+            odds_ratios[feature] = odds_ratio
 
+        # sort the features by odds ratio in descending order
+        sorted_features = sorted(
+            odds_ratios.keys(), key=lambda x: odds_ratios[x], reverse=True)
+
+        # take the top 100 features
+        featuresOdds = sorted_features[:100]
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
 
         return featuresOdds
