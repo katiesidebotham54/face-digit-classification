@@ -3,6 +3,7 @@
 import util
 import classificationMethod
 import math
+import collections
 
 
 class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
@@ -19,6 +20,9 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
         self.k = 1  # this is the smoothing parameter, ** use it in your train method **
         # Look at this flag to decide whether to choose k automatically ** use this in your train method **
         self.automaticTuning = False
+        self.priors = None
+        self.count = None
+        self.featureCounts = None
 
     def setSmoothing(self, k):
         """
@@ -57,10 +61,63 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
 
         To get the list of all possible features or labels, use self.features and 
         self.legalLabels.
+
+        Estimate conditional probabilities from the training data for each possible value of k given in the list kgrid.
         """
 
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # Compute the class priors: proportion of training examples that belong to each class
+        priors = dict(collections.Counter(trainingLabels))
+        for label in priors.keys():
+            priors[label] = priors[label] / float(len(trainingLabels))
+
+        # Initialize featureCounts with Laplace smoothing
+        featureCounts = {}
+        for label in self.legalLabels:
+            featureCounts[label] = util.Counter()
+            for k in self.kgrid:
+                featureCounts[label][k] = util.Counter()
+
+        # Collect counts for each label and feature
+        for i in range(len(trainingData)):
+            label = trainingLabels[i]
+            for k in self.kgrid:
+                featureCounts[label][k][trainingData[i][k]] += 1
+
+        # Calculate probabilities using Laplace smoothing
+        for label in self.legalLabels:
+            for k in self.kgrid:
+                for value in featureCounts[label][k].keys():
+                    count = featureCounts[label][k][value]
+                    total = float(sum(featureCounts[label][k].values()))
+                    featureCounts[label][k][value] = (
+                        count + 1.0) / (total + len(featureCounts[label][k]))
+
+        # Update instance variables
+        self.priors = priors
+        self.featureCounts = featureCounts
+        self.count = [a for a in self.priors]
+
+        # Choose best value of k using held-out validationData
+        best_accuracy = 0
+        best_k = None
+        for k in self.kgrid:
+            accuracy = 0
+            for i in range(len(validationData)):
+                scores = util.Counter()
+                for label in self.legalLabels:
+                    score = self.priors[label]
+                    for j in range(len(validationData[i])):
+                        score *= self.featureCounts[label][j][validationData[i][j]]
+                    scores[label] = score
+                if validationLabels[i] == scores.argMax():
+                    accuracy += 1
+            accuracy /= len(validationData)
+            if accuracy > best_accuracy:
+                best_accuracy = accuracy
+                best_k = k
+
+        # Set best k value
+        self.k = best_k
 
     def classify(self, testData):
         """

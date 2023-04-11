@@ -1,4 +1,10 @@
 # samples.py
+# ----------
+# Licensing Information: Please do not distribute or publish solutions to this
+# project. You are free to use and extend these projects for educational
+# purposes. The Pacman AI projects were developed at UC Berkeley, primarily by
+# John DeNero (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
+# For more info, see http://inst.eecs.berkeley.edu/~cs188/sp09/pacman.html
 
 import zipfile
 import os
@@ -14,7 +20,6 @@ DATUM_HEIGHT = 0  # in pixels
 class Datum:
     """
     A datum is a pixel-level encoding of digits or face/non-face edge maps.
-
     Digits are from the MNIST dataset and face images are from the 
     easy-faces and background categories of the Caltech 101 dataset.
 
@@ -65,12 +70,6 @@ class Datum:
         """
         Returns the value of the pixel at column, row as 0, or 1.
         """
-        print("PIXEL INFO:")
-        print(len(self.pixels))  # Print the size of the pixels list
-        print("LEN OF HEIGHT")
-        print(len(self.pixels[0]))  # Print the size of the pixels list
-        print(self.pixels[column][row])
-        # Print the values of column and row
         return self.pixels[column][row]
 
     def getPixels(self):
@@ -97,7 +96,6 @@ class Datum:
 # Data processing, cleanup and display functions
 
 def loadDataFile(filename, n, width, height):
-    # runs through 3 times for training, validation, and testing
     """
     Reads n data images from a file and returns a list of Datum objects.
 
@@ -126,11 +124,10 @@ def readlines(filename):
         return [l[:-1] for l in open(filename).readlines()]
     else:
         z = zipfile.ZipFile('data.zip')
-        return z.read(filename).decode().split('\n')
+        return z.read(filename).split('\n')
 
 
 def loadLabelsFile(filename, n):
-    # runs through 3 times for training, validation, and testing
     """
     Reads n labels from a file and returns a list of integers.
     """
