@@ -57,6 +57,7 @@ class Datum:
         """
         Create a new datum from file input (standard MNIST encoding).
         """
+        global DATUM_HEIGHT, DATUM_WIDTH
         DATUM_HEIGHT = height
         DATUM_WIDTH = width
         self.height = DATUM_HEIGHT
@@ -124,7 +125,7 @@ def readlines(filename):
         return [l[:-1] for l in open(filename).readlines()]
     else:
         z = zipfile.ZipFile('data.zip')
-        return z.read(filename).split('\n')
+        return z.read(filename).decode().split('\n')
 
 
 def loadLabelsFile(filename, n):
