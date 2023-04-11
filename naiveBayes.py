@@ -146,8 +146,20 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
         logJoint = util.Counter()
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # iterating for each label
+        for label in self.count:
+            prior_probs = self.priors[label]  # Get probability
+            # for each feature in the data point
+            for k, ptr in datum.items():
+                nf = self.featureCounts[label][k]
+                # Calculate probability # Calculate  probability
+                prior_probs = prior_probs + \
+                    math.log((nf.get(datum[k], 0) + 1) /
+                             (sum(nf.values()) + len(nf)))
+            # Add the new probability to the log Joint list
+            logJoint[label] = prior_probs
 
+        # return the log of the estimated probability that the data point belongs to each possible label
         return logJoint
 
     def findHighOddsFeatures(self, label1, label2):
