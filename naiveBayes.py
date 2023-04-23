@@ -72,19 +72,19 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
         priors = dict(collections.Counter(trainingLabels))
         for label in priors.keys():
             priors[label] = priors[label] / float(len(trainingLabels))
-
-        # Initialize featureCounts with Laplace smoothing
         # featureCounts hold the count of the number of times each feature value appears given a specific label
+        # feature value: value of a pixel feature in a specific image would be the brightness or color intensity at that pixel location
         featureCounts = {}
+        # for number 0-9
         for label in self.legalLabels:
+            # create a counter at each number
             featureCounts[label] = util.Counter()
             for k in kgrid:
+                # creates a counter for each k in kgrid
                 featureCounts[label][k] = util.Counter()
 
-        # Collect counts for each label and feature
         # iterates over each training example
         for i in range(len(list(trainingData))):
-            # updates the featureCounts dictionary with the count of each feature value given the label of the example
             label = trainingLabels[i]
             # For each example, it goes through each feature index in kgrid, looks up the value of the feature in the features dictionary
             # and increments the count of that feature value in the featureCounts dictionary
@@ -99,26 +99,28 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
                 # calculates the probability of each feature value given the
                 # label using Laplace smoothing, and stores the result in featureCounts
                 for value in featureCounts[label][k].keys():
+                    print("value: " + str(value))
                     count = featureCounts[label][k][value]
                     total = float(sum(featureCounts[label][k].values()))
                     featureCounts[label][k][value] = (
                         count + 1.0) / (total + len(featureCounts[label][k]))
+                    print(featureCounts[label][k])
 
         # Update instance variables
         self.priors = priors
         self.featureCounts = featureCounts
         self.count = [a for a in self.priors]
 
-        # # Choose best value of k using held-out validationData
+        # Choose best value of k using held-out validationData
         # best_accuracy = 0
         # best_k = None
-        # for k in self.kgrid:
+        # for k in kgrid:
         #     accuracy = 0
-        #     for i in range(len(validationData)):
+        #     for i in range(len(list(validationData))):
         #         scores = util.Counter()
         #         for label in self.legalLabels:
         #             score = self.priors[label]
-        #             for j in range(len(validationData[i])):
+        #             for j in range(len(list(validationData))[i]):
         #                 score *= self.featureCounts[label][j][self.features[j]
         #                                                       [validationData[i][j]]]
         #             scores[label] = score
@@ -157,24 +159,22 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
         self.legalLabels.
         """
         logJoint = util.Counter()
-
+        # datum is a dic with (feature,value) pairs
         "*** YOUR CODE HERE ***"
-        # iterating for each label
-        for label in self.count:
-            prior_probs = self.priors[label]  # Get probability
-            # for each feature in the data point
-
-            for k, ptr in datum.items():
-                print("k: " + str(k))
-                nf = self.featureCounts[label][k]
-                print(nf)
-                # Calculate probability # Calculate  probability
-                prior_probs = prior_probs + \
-                    math.log((nf.get(datum[k], 0) + 1) /
-                             (sum(nf.values()) + len(nf)))
-            # Add the new probability to the log Joint list
-            logJoint[label] = prior_probs
-
+        # iterating for each label (a number 0-9)
+        for label in self.legalLabels:
+            # calculate the log prior probability of the label
+            logPrior = math.log(self.priors[label])
+            # iterate over each feature in the datum
+            for feature, value in datum.items():
+                # print(f"Feature: {feature}, Value: {value}")
+                # calculate the log conditional probability of the feature given the label
+                logCondProb = math.log(self.featureCounts[label][feature][value] + 1) - math.log(
+                    self.count[label] + len(self.featureCounts[label]))
+                # add the log conditional probability to the log joint distribution
+                logJoint[label] += logCondProb
+            # add the log prior probability to the log joint distribution
+            # logJoint[label] += logPrior
         # return the log of the estimated probability that the data point belongs to each possible label
         return logJoint
 
