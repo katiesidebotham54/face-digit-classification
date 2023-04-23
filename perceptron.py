@@ -50,7 +50,6 @@ def train(self, trainingData, trainingLabels, validationData, validationLabels):
         print("Starting iteration ", iteration, "...")
         for i in range(len(trainingData)):
             "*** YOUR CODE HERE ***"
-            util.raiseNotDefined()
 
 
 def classify(self, data):

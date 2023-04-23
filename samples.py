@@ -172,7 +172,7 @@ def convertToInteger(data):
     if type(data) != type([]):
         return IntegerConversionFunction(data)
     else:
-        return map(convertToInteger, data)
+        return list(map(convertToInteger, data))
 
 # Testing
 

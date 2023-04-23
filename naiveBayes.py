@@ -64,29 +64,40 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
 
         Estimate conditional probabilities from the training data for each possible value of k given in the list kgrid.
         """
+        "*** YOUR CODE HERE ***"
 
-        # Compute the class priors: proportion of training examples that belong to each class
+        # Parameter Estimation, compute the class priors: proportion of training examples that belong to each class
+        # uses Counter to count number of training instances with each label, and then divides
+        # by the total number of training instances to obtain the proportion of instances with each label
         priors = dict(collections.Counter(trainingLabels))
         for label in priors.keys():
             priors[label] = priors[label] / float(len(trainingLabels))
 
         # Initialize featureCounts with Laplace smoothing
+        # featureCounts hold the count of the number of times each feature value appears given a specific label
         featureCounts = {}
         for label in self.legalLabels:
             featureCounts[label] = util.Counter()
-            for k in self.kgrid:
+            for k in kgrid:
                 featureCounts[label][k] = util.Counter()
 
         # Collect counts for each label and feature
-        for i in range(len(trainingData)):
+        # iterates over each training example
+        for i in range(len(list(trainingData))):
+            # updates the featureCounts dictionary with the count of each feature value given the label of the example
             label = trainingLabels[i]
+            # For each example, it goes through each feature index in kgrid, looks up the value of the feature in the features dictionary
+            # and increments the count of that feature value in the featureCounts dictionary
             for k in self.kgrid:
                 featureCounts[label][k][self.features[k]
                                         [trainingData[i][k]]] += 1
 
-        # Calculate probabilities using Laplace smoothing
+        # Calculate conditional probabilities using Laplace smoothing
+        # for each label and feature index in kgrid
         for label in self.legalLabels:
-            for k in self.kgrid:
+            for k in kgrid:
+                # calculates the probability of each feature value given the
+                # label using Laplace smoothing, and stores the result in featureCounts
                 for value in featureCounts[label][k].keys():
                     count = featureCounts[label][k][value]
                     total = float(sum(featureCounts[label][k].values()))
@@ -98,28 +109,28 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
         self.featureCounts = featureCounts
         self.count = [a for a in self.priors]
 
-        # Choose best value of k using held-out validationData
-        best_accuracy = 0
-        best_k = None
-        for k in self.kgrid:
-            accuracy = 0
-            for i in range(len(validationData)):
-                scores = util.Counter()
-                for label in self.legalLabels:
-                    score = self.priors[label]
-                    for j in range(len(validationData[i])):
-                        score *= self.featureCounts[label][j][self.features[j]
-                                                              [validationData[i][j]]]
-                    scores[label] = score
-                if validationLabels[i] == scores.argMax():
-                    accuracy += 1
-            accuracy /= len(validationData)
-            if accuracy > best_accuracy:
-                best_accuracy = accuracy
-                best_k = k
+        # # Choose best value of k using held-out validationData
+        # best_accuracy = 0
+        # best_k = None
+        # for k in self.kgrid:
+        #     accuracy = 0
+        #     for i in range(len(validationData)):
+        #         scores = util.Counter()
+        #         for label in self.legalLabels:
+        #             score = self.priors[label]
+        #             for j in range(len(validationData[i])):
+        #                 score *= self.featureCounts[label][j][self.features[j]
+        #                                                       [validationData[i][j]]]
+        #             scores[label] = score
+        #         if validationLabels[i] == scores.argMax():
+        #             accuracy += 1
+        #     accuracy /= len(validationData)
+        #     if accuracy > best_accuracy:
+        #         best_accuracy = accuracy
+        #         best_k = k
 
-        # Set best k value
-        self.k = best_k
+        # # Set best k value
+        # self.k = best_k
 
     def classify(self, testData):
         """
@@ -152,8 +163,11 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
         for label in self.count:
             prior_probs = self.priors[label]  # Get probability
             # for each feature in the data point
+
             for k, ptr in datum.items():
+                print("k: " + str(k))
                 nf = self.featureCounts[label][k]
+                print(nf)
                 # Calculate probability # Calculate  probability
                 prior_probs = prior_probs + \
                     math.log((nf.get(datum[k], 0) + 1) /

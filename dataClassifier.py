@@ -21,12 +21,9 @@ def basicFeatureExtractorDigit(datum):
     each pixel in the provided datum is white (0) or gray/black (1)
     """
     a = datum.getPixels()
-
     features = util.Counter()
     for x in range(DIGIT_DATUM_WIDTH):
         for y in range(DIGIT_DATUM_HEIGHT):
-            # print("DATUM HEIGHT: ")
-            # print(DIGIT_DATUM_HEIGHT)
             if datum.getPixel(x, y) > 0:
                 features[(x, y)] = 1
             else:
