@@ -14,67 +14,71 @@ class PerceptronClassifier:
     (not to a raw samples.Datum).
     """
 
+    def __init__(self, legalLabels, max_iterations):
+        self.legalLabels = legalLabels
+        self.type = "perceptron"
+        self.max_iterations = max_iterations
+        self.weights = {}
+        for label in legalLabels:
+            # this is the data-structure you should use
+            self.weights[label] = util.Counter()
 
-def __init__(self, legalLabels, max_iterations):
-    self.legalLabels = legalLabels
-    self.type = "perceptron"
-    self.max_iterations = max_iterations
-    self.weights = {}
-    for label in legalLabels:
-        # this is the data-structure you should use
-        self.weights[label] = util.Counter()
+    def setWeights(self, weights):
+        assert len(weights) == len(self.legalLabels)
+        self.weights = weights
 
+    def train(self, trainingData, trainingLabels, validationData, validationLabels):
+        """
+        The training loop for the perceptron passes through the training data several
+        times and updates the weight vector for each label based on classification errors.
+        See the project description for details.
 
-def setWeights(self, weights):
-    assert len(weights) == len(self.legalLabels)
-    self.weights = weights
+        Use the provided self.weights[label] data structure so that
+        the classify method works correctly. Also, recall that a
+        datum is a counter from features to values for those features
+        (and thus represents a vector a values).
+        """
 
+        trainingData = list(trainingData)  # convert map object to list
+        self.features = trainingData[0].keys()  # could be useful later
+        # DO NOT ZERO OUT YOUR WEIGHTS BEFORE STARTING TRAINING, OR
+        # THE AUTOGRADER WILL LIKELY DEDUCT POINTS.
 
-def train(self, trainingData, trainingLabels, validationData, validationLabels):
-    """
-    The training loop for the perceptron passes through the training data several
-    times and updates the weight vector for each label based on classification errors.
-    See the project description for details.
+        for iteration in range(self.max_iterations):
+            print("Starting iteration ", iteration, "...")
+            for i in range(len(trainingData)):
+                vectors = util.Counter()
+                for label in self.legalLabels:
+                    #weight * feature
+                    vectors[label] = self.weights[label] * trainingData[i]
 
-    Use the provided self.weights[label] data structure so that
-    the classify method works correctly. Also, recall that a
-    datum is a counter from features to values for those features
-    (and thus represents a vector a values).
-    """
+                best_pred = vectors.argMax()
+                if trainingLabels[i] != best_pred:
+                    self.weights[best_pred] -= trainingData[i]
+                    self.weights[trainingLabels[i]] += trainingData[i]
 
-    self.features = trainingData[0].keys()  # could be useful later
-    # DO NOT ZERO OUT YOUR WEIGHTS BEFORE STARTING TRAINING, OR
-    # THE AUTOGRADER WILL LIKELY DEDUCT POINTS.
+    def classify(self, data):
+        """
+        Classifies each datum as the label that most closely matches the prototype vector
+        for that label.  See the project description for details.
 
-    for iteration in range(self.max_iterations):
-        print("Starting iteration ", iteration, "...")
-        for i in range(len(trainingData)):
-            "*** YOUR CODE HERE ***"
+        Recall that a datum is a util.counter...
+        """
+        guesses = []
+        for datum in data:
+            vectors = util.Counter()
+            for l in self.legalLabels:
+                vectors[l] = self.weights[l] * datum
+            guesses.append(vectors.argMax())
+        return guesses
 
+    def findHighWeightFeatures(self, label):
+        """
+        Returns a list of the 100 features with the greatest weight for some label
+        """
+        featuresWeights = []
 
-def classify(self, data):
-    """
-    Classifies each datum as the label that most closely matches the prototype vector
-    for that label.  See the project description for details.
+        "*** YOUR CODE HERE ***"
+        util.raiseNotDefined()
 
-    Recall that a datum is a util.counter...
-    """
-    guesses = []
-    for datum in data:
-        vectors = util.Counter()
-        for l in self.legalLabels:
-            vectors[l] = self.weights[l] * datum
-        guesses.append(vectors.argMax())
-    return guesses
-
-
-def findHighWeightFeatures(self, label):
-    """
-    Returns a list of the 100 features with the greatest weight for some label
-    """
-    featuresWeights = []
-
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
-
-    return featuresWeights
+        return featuresWeights

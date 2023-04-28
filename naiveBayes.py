@@ -41,6 +41,8 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
         self.features = list(
             set([f for datum in trainingData for f in datum.keys()]))
 
+        print(len(list(trainingData)))
+
         if (self.automaticTuning):
             kgrid = [0.001, 0.01, 0.05, 0.1, 0.5, 1, 5, 10, 20, 50]
         else:
@@ -82,8 +84,9 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
             for k in kgrid:
                 # creates a counter for each k in kgrid
                 featureCounts[label][k] = util.Counter()
-
         # iterates over each training example
+        print(len(list(trainingData)))
+        print(list(trainingData))
         for i in range(len(list(trainingData))):
             label = trainingLabels[i]
             # For each example, it goes through each feature index in kgrid, looks up the value of the feature in the features dictionary
@@ -91,20 +94,21 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
             for k in self.kgrid:
                 featureCounts[label][k][self.features[k]
                                         [trainingData[i][k]]] += 1
-
         # Calculate conditional probabilities using Laplace smoothing
         # for each label and feature index in kgrid
-        for label in self.legalLabels:
-            for k in kgrid:
-                # calculates the probability of each feature value given the
-                # label using Laplace smoothing, and stores the result in featureCounts
-                for value in featureCounts[label][k].keys():
-                    print("value: " + str(value))
-                    count = featureCounts[label][k][value]
-                    total = float(sum(featureCounts[label][k].values()))
-                    featureCounts[label][k][value] = (
-                        count + 1.0) / (total + len(featureCounts[label][k]))
-                    print(featureCounts[label][k])
+        # for label in self.legalLabels:
+        #     for k in kgrid:
+        #         for value in featureCounts[label][k].keys():
+        #             print(featureCounts[label][k][value])
+        # calculates the probability of each feature value given the
+        # label using Laplace smoothing, and stores the result in featureCounts
+        # for value in featureCounts[label][k].keys():
+        #     print("value: " + str(value))
+        #     count = featureCounts[label][k][value]
+        #     total = float(sum(featureCounts[label][k].values()))
+        #     featureCounts[label][k][value] = (
+        #         count + 1.0) / (total + len(featureCounts[label][k]))
+        #     print(featureCounts[label][k])
 
         # Update instance variables
         self.priors = priors

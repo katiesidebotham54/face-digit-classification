@@ -1,0 +1,25 @@
+{
+    "cSpell.words": [
+        "autograder",
+        "autotune",
+        "datapoints",
+        "digitdata",
+        "facedata",
+        "facedatatest",
+        "facedatatestlabels",
+        "facedatatrain",
+        "facedatatrainlabels",
+        "hyperparameters",
+        "kgrid",
+        "minicontest",
+        "naivebayes",
+        "otherjunk",
+        "perceptron",
+        "testimages",
+        "testlabels",
+        "trainingimages",
+        "traininglabels",
+        "validationimages",
+        "validationlabels"
+    ]
+}
