@@ -47,41 +47,6 @@ def basicFeatureExtractorFace(datum):
     return features
 
 
-def enhancedFeatureExtractorDigit(datum):
-    """
-    Your feature extraction playground.
-
-    You should return a util.Counter() of features
-    for this datum (datum is of type samples.Datum).
-
-    ## DESCRIBE YOUR ENHANCED FEATURES HERE...
-
-    ##
-    """
-    features = basicFeatureExtractorDigit(datum)
-
-    "*** YOUR CODE HERE ***"
-
-    return features
-
-
-def contestFeatureExtractorDigit(datum):
-    """
-    Specify features to use for the minicontest
-    """
-    features = basicFeatureExtractorDigit(datum)
-    return features
-
-
-def enhancedFeatureExtractorFace(datum):
-    """
-    Your feature extraction playground for faces.
-    It is your choice to modify this.
-    """
-    features = basicFeatureExtractorFace(datum)
-    return features
-
-
 def analysis(classifier, guesses, testLabels, testData, rawTestData, printImage):
     """
     This function is called after learning.
@@ -166,8 +131,6 @@ def readCommand(argv):
                       choices=['digits', 'faces'], default='digits')
     parser.add_option(
         '-t', '--training', help=default('The size of the training set'), default=100, type="int")
-    parser.add_option('-f', '--features', help=default(
-        'Whether to use enhanced features'), default=False, action="store_true")
     parser.add_option('-o', '--odds', help=default('Whether to compute odds ratios'),
                       default=False, action="store_true")
     parser.add_option('-1', '--label1', help=default(
@@ -181,7 +144,7 @@ def readCommand(argv):
     parser.add_option('-a', '--autotune', help=default(
         "Whether to automatically tune hyperparameters"), default=False, action="store_true")
     parser.add_option('-i', '--iterations', help=default(
-        "Maximum iterations to run training"), default=3, type="int")
+        "Maximum iterations to run training"), default=10, type="int")
     parser.add_option('-s', '--test', help=default("Amount of test data to use"),
                       default=TEST_SET_SIZE, type="int")
 
@@ -195,27 +158,15 @@ def readCommand(argv):
     print("--------------------")
     print("data:\t\t" + options.data)
     print("classifier:\t\t" + options.classifier)
-    if not options.classifier == 'minicontest':
-        print("using enhanced features?:\t" + str(options.features))
-    else:
-        print("using minicontest feature extractor")
     print("training set size:\t" + str(options.training))
     if (options.data == "digits"):
         printImage = ImagePrinter(
             DIGIT_DATUM_WIDTH, DIGIT_DATUM_HEIGHT).printImage
-        if (options.features):
-            featureFunction = enhancedFeatureExtractorDigit
-        else:
-            featureFunction = basicFeatureExtractorDigit
-        if (options.classifier == 'minicontest'):
-            featureFunction = contestFeatureExtractorDigit
+        featureFunction = basicFeatureExtractorDigit
     elif (options.data == "faces"):
         printImage = ImagePrinter(
             FACE_DATUM_WIDTH, FACE_DATUM_HEIGHT).printImage
-        if (options.features):
-            featureFunction = enhancedFeatureExtractorFace
-        else:
-            featureFunction = basicFeatureExtractorFace
+        featureFunction = basicFeatureExtractorFace
     else:
         print("Unknown dataset", options.data)
         print(USAGE_STRING)
@@ -278,12 +229,6 @@ USAGE_STRING = """
                   - trains the default mostFrequent classifier on the digit dataset
                   using the default 100 training examples and
                   then test the classifier on test data
-              (2) python dataClassifier.py -c naiveBayes -d digits -t 1000 -f -o -1 3 -2 6 -k 2.5
-                  - would run the naive Bayes classifier on 1000 training examples
-                  using the enhancedFeatureExtractorDigits function to get the features
-                  on the faces dataset, would use the smoothing parameter equals to 2.5, would
-                  test the classifier on the test data and performs an odd ratio analysis
-                  with label1=3 vs. label2=6
                  """
 
 # Main harness code
@@ -363,12 +308,6 @@ def runClassifier(args, options):
 
         print(string3)
         printImage(features_odds)
-
-    if ((options.weights) & (options.classifier == "perceptron")):
-        for l in classifier.legalLabels:
-            features_weights = classifier.findHighWeightFeatures(l)
-            print("=== Features with high weight for label %d ===" % l)
-            printImage(features_weights)
 
 
 if __name__ == '__main__':

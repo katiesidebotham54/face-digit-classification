@@ -71,14 +71,3 @@ class PerceptronClassifier:
                 vectors[l] = self.weights[l] * datum
             guesses.append(vectors.argMax())
         return guesses
-
-    def findHighWeightFeatures(self, label):
-        """
-        Returns a list of the 100 features with the greatest weight for some label
-        """
-        featuresWeights = []
-
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
-
-        return featuresWeights
