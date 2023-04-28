@@ -3,7 +3,6 @@
 import mostFrequent
 import naiveBayes
 import perceptron
-import mira
 import samples
 import sys
 import util
@@ -162,7 +161,7 @@ def readCommand(argv):
     parser = OptionParser(USAGE_STRING)
 
     parser.add_option('-c', '--classifier', help=default('The type of classifier'), choices=[
-                      'mostFrequent', 'nb', 'naiveBayes', 'perceptron', 'mira', 'minicontest'], default='mostFrequent')
+                      'mostFrequent', 'nb', 'naiveBayes', 'perceptron'], default='mostFrequent')
     parser.add_option('-d', '--data', help=default('Dataset to use'),
                       choices=['digits', 'faces'], default='digits')
     parser.add_option(
@@ -260,16 +259,6 @@ def readCommand(argv):
     elif (options.classifier == "perceptron"):
         classifier = perceptron.PerceptronClassifier(
             legalLabels, options.iterations)
-    elif (options.classifier == "mira"):
-        classifier = mira.MiraClassifier(legalLabels, options.iterations)
-        if (options.autotune):
-            print("using automatic tuning for MIRA")
-            classifier.automaticTuning = True
-        else:
-            print("using default C=0.001 for MIRA")
-    elif (options.classifier == 'minicontest'):
-        import minicontest
-        classifier = minicontest.contestClassifier(legalLabels)
     else:
         print("Unknown classifier:", options.classifier)
         print(USAGE_STRING)
