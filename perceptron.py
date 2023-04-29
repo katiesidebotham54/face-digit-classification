@@ -27,35 +27,51 @@ class PerceptronClassifier:
         assert len(weights) == len(self.legalLabels)
         self.weights = weights
 
-    def train(self, trainingData, trainingLabels, validationData, validationLabels):
-        """
-        The training loop for the perceptron passes through the training data several
-        times and updates the weight vector for each label based on classification errors.
-        See the project description for details.
+    # def train(self, trainingData, trainingLabels, validationData, validationLabels):
+    #     """
+    #     The training loop for the perceptron passes through the training data several
+    #     times and updates the weight vector for each label based on classification errors.
+    #     See the project description for details.
 
-        Use the provided self.weights[label] data structure so that
-        the classify method works correctly. Also, recall that a
-        datum is a counter from features to values for those features
-        (and thus represents a vector a values).
-        """
+    #     Use the provided self.weights[label] data structure so that
+    #     the classify method works correctly. Also, recall that a
+    #     datum is a counter from features to values for those features
+    #     (and thus represents a vector a values).
+    #     """
 
-        trainingData = list(trainingData)  # convert map object to list
-        self.features = trainingData[0].keys()  # could be useful later
-        # DO NOT ZERO OUT YOUR WEIGHTS BEFORE STARTING TRAINING, OR
-        # THE AUTOGRADER WILL LIKELY DEDUCT POINTS.
+    #     trainingData = list(trainingData)  # convert map object to list
+    #     self.features = trainingData[0].keys()  # could be useful later
+    #     # DO NOT ZERO OUT YOUR WEIGHTS BEFORE STARTING TRAINING, OR
+    #     # THE AUTOGRADER WILL LIKELY DEDUCT POINTS.
+
+    #     for iteration in range(self.max_iterations):
+    #         print("Starting iteration ", iteration, "...")
+    #         for i in range(len(trainingData)):
+    #             vectors = util.Counter()
+    #             for label in self.legalLabels:
+    #                 #weight * feature
+    #                 vectors[label] = self.weights[label] * trainingData[i]
+
+    #             best_pred = vectors.argMax()
+    #             if trainingLabels[i] != best_pred:
+    #                 self.weights[best_pred] -= trainingData[i]
+    #                 self.weights[trainingLabels[i]] += trainingData[i]
+    
+    def train( self, trainingData, trainingLabels, validationData, validationLabels ):
+        trainingData = list(trainingData)
+        self.features = trainingData[0].keys()
+        lab = util.Counter()
 
         for iteration in range(self.max_iterations):
-            print("Starting iteration ", iteration, "...")
+            print ("Starting iteration ", iteration, "...")
             for i in range(len(trainingData)):
-                vectors = util.Counter()
-                for label in self.legalLabels:
-                    #weight * feature
-                    vectors[label] = self.weights[label] * trainingData[i]
-
-                best_pred = vectors.argMax()
-                if trainingLabels[i] != best_pred:
-                    self.weights[best_pred] -= trainingData[i]
-                    self.weights[trainingLabels[i]] += trainingData[i]
+                for l in self.legalLabels:
+                    lab[l] = trainingData[i].__mul__(self.weights[l])
+                if not(trainingLabels[i] == lab.argMax()):
+                    self.weights[trainingLabels[i]].__radd__(trainingData[i])
+                    self.weights[lab.argMax()].__sub__(trainingData[i])
+          #util.raiseNotDefined()
+    
 
     def classify(self, data):
         """

@@ -144,7 +144,7 @@ def readCommand(argv):
     parser.add_option('-a', '--autotune', help=default(
         "Whether to automatically tune hyperparameters"), default=False, action="store_true")
     parser.add_option('-i', '--iterations', help=default(
-        "Maximum iterations to run training"), default=10, type="int")
+        "Maximum iterations to run training"), default=3, type="int")
     parser.add_option('-s', '--test', help=default("Amount of test data to use"),
                       default=TEST_SET_SIZE, type="int")
 
