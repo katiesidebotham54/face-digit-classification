@@ -24,8 +24,6 @@ class knnClassifier:
         """
         self.trainingData = list(trainingData)
         self.trainingLabels = list(trainingLabels)
-        validationData = list(validationData)
-        validationLabels = list(validationLabels)
         self.features = list(
             set([f for datum in trainingData for f in datum.keys()]))
 

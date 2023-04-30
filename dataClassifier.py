@@ -136,8 +136,6 @@ def readCommand(argv):
                       default=False, action="store_true")
     parser.add_option('-1', '--label1', help=default(
         "First label in an odds ratio comparison"), default=0, type="int")
-    parser.add_option('-2', '--label2', help=default(
-        "Second label in an odds ratio comparison"), default=1, type="int")
     parser.add_option('-w', '--weights', help=default('Whether to print weights'),
                       default=False, action="store_true")
     parser.add_option('-k', '--smoothing', help=default(
