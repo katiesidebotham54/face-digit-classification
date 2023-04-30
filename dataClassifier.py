@@ -127,7 +127,7 @@ def readCommand(argv):
     parser = OptionParser(USAGE_STRING)
 
     parser.add_option('-c', '--classifier', help=default('The type of classifier'), choices=[
-                      'mostFrequent', 'nb', 'naiveBayes', 'perceptron','knn'], default='mostFrequent')
+                      'mostFrequent', 'nb', 'naiveBayes', 'perceptron', 'knn'], default='mostFrequent')
     parser.add_option('-d', '--data', help=default('Dataset to use'),
                       choices=['digits', 'faces'], default='digits')
     parser.add_option(
@@ -211,7 +211,7 @@ def readCommand(argv):
     elif (options.classifier == "perceptron"):
         classifier = perceptron.PerceptronClassifier(
             legalLabels, options.iterations)
-    elif(options.classifier == "knn"):
+    elif (options.classifier == "knn"):
         classifier = knn.knnClassifier(legalLabels, options.iterations)
     else:
         print("Unknown classifier:", options.classifier)
