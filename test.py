@@ -71,7 +71,7 @@ if run_knn:
         start_faces = datetime.datetime.now()
         for i in range(iterations):
             print("Running k Nearest Neighbor Faces:", amount)
-            os.system(
+            subprocess.call(
                 f"python dataClassifier.py -c knn -d faces -t {amount} -s 150 >> results.txt")
         end_faces = datetime.datetime.now()
         print(f"{end_faces - start_faces} seconds")
