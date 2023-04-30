@@ -49,12 +49,6 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
         kgrid = [self.k]
         
     self.trainAndTune(trainingData, trainingLabels, validationData, validationLabels, kgrid)
-
-  def getFeatureCountTrue(self, feature, label):
-    return self.featureCounts[label][feature]
-
-  def getFeatureCountFalse(self, feature, label):
-    return self.count_labels[label] - self.featureCounts[label][feature]
       
   def trainAndTune(self, trainingData, trainingLabels, validationData, validationLabels, kgrid):
     """
@@ -70,27 +64,18 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     self.legalLabels.
     """
 
-    "*** YOUR CODE HERE ***"
-    #added vars:
-    #   self.count_labels
-    #   self.featureCounts
-    #   self.dataCount
+    # Count the labels in the training set
+    self.count_labels = [0 for label in self.legalLabels]
+    for label in trainingLabels:
+        self.count_labels[label] += 1
 
-    #Use this var to get P(label)
-    self.count_labels = [0 for x in self.legalLabels]
+    # Count the features for each label in the training set
+    self.featureCounts = {label: util.Counter() for label in self.legalLabels}
+    for features, label in zip(trainingData, trainingLabels):
+        self.featureCounts[label] += features
 
-    self.featureCounts = {}
-    for label in self.legalLabels:
-      self.featureCounts[label] = util.Counter() # this is the data-structure you should use
-
-    counter = 0
-    for i in range(len(trainingData)):
-      counter += 1
-      self.count_labels[trainingLabels[i]] += 1
-      self.featureCounts[i] = util.Counter()
-      self.featureCounts[trainingLabels[i]] += trainingData[i]
-
-    self.dataCount = counter
+    # Store the total number of training instances
+    self.dataCount = len(trainingData)
 
     
         
@@ -103,43 +88,28 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     guesses = []
     self.posteriors = [] # Log posteriors are stored for later data analysis (autograder).
     for datum in testData:
-      posterior = self.calculateLogJointProbabilities(datum)
-      guesses.append(posterior.argMax())
-      self.posteriors.append(posterior)
+        logJoint = util.Counter()
+        for label in self.legalLabels:
+            priorProb_Labels = math.log(self.count_labels[label] / self.dataCount)
+
+            featureProb_givenLabel = 0
+            for feature, value in datum.items():
+                trueCount = self.featureCounts[label][feature] + self.k
+                falseCount = self.count_labels[label] - self.featureCounts[label][feature] + self.k
+                denominator = trueCount + falseCount
+
+                if value:
+                    featureProb_givenLabel += math.log(trueCount / denominator)
+                else:
+                    featureProb_givenLabel += math.log(falseCount / denominator)
+
+            logJoint[label] = priorProb_Labels + featureProb_givenLabel
+
+        posterior = logJoint
+        guesses.append(posterior.argMax())
+        self.posteriors.append(posterior)
+
     return guesses
-      
-  def calculateLogJointProbabilities(self, datum):
-    """
-    Returns the log-joint distribution over legal labels and the datum.
-    Each log-probability should be stored in the log-joint counter, e.g.    
-    logJoint[3] = <Estimate of log( P(Label = 3, datum) )>
-    
-    To get the list of all possible features or labels, use self.features and 
-    self.legalLabels.
-    """
-    logJoint = util.Counter()
-    
-    #getFeatureCountTrue(feature, label)
-    #getFeatureCountFalse(feature, label)
-
-    "*** YOUR CODE HERE ***"
-    for label in self.legalLabels:
-      priorProb_Labels = math.log(self.count_labels[label] / self.dataCount)
-
-      featureProb_givenLabel = 0
-      for feature in datum:
-        trueCount = self.getFeatureCountTrue(feature, label) + self.k
-        falseCount = self.getFeatureCountFalse(feature, label) + self.k
-        denominator = trueCount + falseCount
-
-        if(datum[feature]):
-          featureProb_givenLabel += math.log(trueCount / denominator)
-        else:
-          featureProb_givenLabel += math.log(falseCount / denominator)
-
-      logJoint[label] = priorProb_Labels + featureProb_givenLabel
-    
-    return logJoint
   
   def findHighOddsFeatures(self, label1, label2):
     """

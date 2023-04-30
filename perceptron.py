@@ -22,6 +22,7 @@ class PerceptronClassifier:
         for label in legalLabels:
             # this is the data-structure you should use
             self.weights[label] = util.Counter()
+        print("Legal Labels:", self.legalLabels)
 
     def setWeights(self, weights):
         assert len(weights) == len(self.legalLabels)
