@@ -17,8 +17,8 @@ digit_array = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
 iterations = 1
 
 # Choose which algorithms to run
-run_naive_bayes = True
-run_perceptron = True
+run_naive_bayes = False
+run_perceptron = False
 run_knn = True
 
 # Used to globally track how much time has passed
@@ -31,7 +31,7 @@ if run_naive_bayes:
         for i in range(iterations):
             print(f"Running naiveBayes Faces: {amount}")
             subprocess.call(
-                f"python dataClassifier.py -c naiveBayes -d faces -t {amount} -s 150 >> results.txt", shell=True)
+                f"python dataClassifier.py -c naiveBayes -d faces -t {amount} >> results.txt", shell=True)
         end_faces = datetime.datetime.now()
         print(f"{(end_faces - start_faces).total_seconds()} seconds")
 
@@ -40,7 +40,7 @@ if run_naive_bayes:
         for i in range(iterations):
             print(f"Running naiveBayes Digits: {amount}")
             subprocess.call(
-                f"python dataClassifier.py -c naiveBayes -d digits -t {amount} -s 1000 >> results.txt", shell=True)
+                f"python dataClassifier.py -c naiveBayes -d digits -t {amount}  >> results.txt", shell=True)
         end_digits = datetime.datetime.now()
         print(f"{(end_digits - start_digits).total_seconds()} seconds")
 
@@ -51,7 +51,7 @@ if run_perceptron:
         for i in range(iterations):
             print(f"Running Perceptron Faces: {amount}")
             subprocess.call(
-                f"python dataClassifier.py -c perceptron -d faces -t {amount} -i 2 -s 150 >> results.txt", shell=True)
+                f"python dataClassifier.py -c perceptron -d faces -t {amount} >> results.txt", shell=True)
         end_faces = datetime.datetime.now()
         print(f"{(end_faces - start_faces).total_seconds()} seconds")
 
@@ -60,7 +60,7 @@ if run_perceptron:
         for i in range(iterations):
             print(f"Running Perceptron Digits: {amount}")
             subprocess.call(
-                f"python dataClassifier.py -c perceptron -d digits -t {amount} -s 1000 >> results.txt", shell=True)
+                f"python dataClassifier.py -c perceptron -d digits -t {amount} >> results.txt", shell=True)
         end_digits = datetime.datetime.now()
         print(f"{(end_digits - start_digits).total_seconds()} seconds")
 
@@ -70,20 +70,20 @@ if run_knn:
     for amount in face_array:
         start_faces = datetime.datetime.now()
         for i in range(iterations):
-            print("Running k Nearest Neighbor Faces:", amount)
+            print(f"Running KNN Faces: {amount}")
             subprocess.call(
-                f"python dataClassifier.py -c knn -d faces -t {amount} -s 150 >> results.txt")
+                f"python dataClassifier.py -c knn -d faces -t {amount} >> results.txt", shell=True)
         end_faces = datetime.datetime.now()
         print(f"{end_faces - start_faces} seconds")
 
     for amount in digit_array:
         start_digits = datetime.datetime.now()
         for i in range(iterations):
-            print("Running k Nearest Neighbor Digits:", amount)
+            print(f"Running KNN Digits: {amount}")
             subprocess.call(
-                f"python dataClassifier.py -c kNN -d digits -t {amount} -s 1000 >> results.txt")
+                f"python dataClassifier.py -c kNN -d digits -t {amount} >> results.txt", shell=True)
         end_digits = datetime.datetime.now()
-        print(f"{end_digits - start_digits} seconds")
+        print(f"{(end_digits - start_digits).total_seconds()} seconds")
 
 end_time = datetime.datetime.now()
 print(f"{end_time - start_time} seconds (TOTAL)")
