@@ -1,8 +1,8 @@
 # knn.py
 import util
-import numpy
 import math
 import statistics
+from numpy.linalg import norm
 from collections import defaultdict
 
 
@@ -11,26 +11,33 @@ class knnClassifier:
     k-Nearest Neighbor classifier.
     """
 
-    def __init__(self, legalLabels, k=10):
+    def __init__(self, legalLabels, max_iterations):
         self.legalLabels = legalLabels
-        self.type = "kNN"
-        self.k = k
+        self.type = "knn"
+        self.k = 10
+        self.max_iterations = max_iterations
         self.weights = {}
 
     def train(self, trainingData, trainingLabels, validationData, validationLabels):
         """
         Preprocess the training data and save it for later use.
         """
-        trainingData = list(trainingData)
-        trainingLabels = list(trainingLabels)
+        self.trainingData = list(trainingData)
+        self.trainingLabels = list(trainingLabels)
+        validationData = list(validationData)
+        validationLabels = list(validationLabels)
+        self.features = list(
+            set([f for datum in trainingData for f in datum.keys()]))
 
-    def findDistance(self, test_datum, train_datum):
+    def getDistance(self, test_datum, train_datum):
         """
-        Calculate the Euclidean distance between two data points.
+            Calculate the Euclidean distance between two data points.
         """
-        x = test_datum - train_datum
-        # return numpy.sum(numpy.abs([x[value] for value in x]))
-        return numpy.sqrt(numpy.sum(numpy.square(x)))
+        # distance = 0
+        # for feature in self.features:
+        #     distance += abs(test_datum[feature] - train_datum[feature])
+        # return distance
+        return norm(test_datum-train_datum)
 
     def classify(self, testData):
         """
@@ -39,18 +46,15 @@ class knnClassifier:
         then pick the label of the training image with the lowest distance.
         """
         guesses = []
-        # for datum in testData:
-        #     distanceValues = []
-        #     for i in range(len(self.trainingData)):
-        #         distanceValues.append((self.findDistance(datum,self.trainingData[i]), i))
-        #     distanceValues.sort()
-        #     distanceValues = distanceValues[:self.k]
-        #     bestK_labels = []
-        #     for distance in distanceValues:
-        #         bestK_labels.append(self.trainingLabels[distance[1]])
-        #     try:
-        #         guesses.append(statistics.mode(bestK_labels))
-        #     except:
-        #         guesses.append(bestK_labels[0])
-
+        for datum in testData:
+            distances = []
+            for i in range(len(self.trainingData)):
+                distances.append(
+                    (self.trainingLabels[i], self.getDistance(datum, self.trainingData[i])))
+            distances.sort(key=lambda x: x[1])
+            k_nearest = distances[:self.k]
+            counter = util.Counter()
+            for label, _ in k_nearest:
+                counter[label] += 1
+            guesses.append(counter.argMax())
         return guesses
