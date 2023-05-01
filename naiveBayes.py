@@ -13,6 +13,14 @@ import collections
 from typing import List, Dict, Any
 
 
+def accuracy_score(y_true, y_pred):
+            correct = 0
+            total = len(y_true)
+            for i in range(total):
+                if y_true[i] == y_pred[i]:
+                    correct += 1
+            return correct / total
+        
 class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     """
     See the project description for the specifications of the Naive Bayes classifier.
@@ -53,7 +61,7 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
 
         self.trainAndTune(trainingData, trainingLabels,
                           validationData, validationLabels, kgrid)
-
+    
     def trainAndTune(self, trainingData, trainingLabels, validationData, validationLabels, kgrid):
         """
         Trains the classifier by collecting counts over the training data, and
@@ -67,20 +75,21 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
         To get the list of all possible features or labels, use self.features and 
         self.legalLabels.
         """
-
         # Count the labels in the training set
-        self.count_labels = [0 for label in self.legalLabels]
+        self.count_labels = util.Counter()
+        self.dataCount = len(trainingLabels)
+
         for label in trainingLabels:
             self.count_labels[label] += 1
 
-        # Count the features for each label in the training set
-        self.featureCounts = {label: util.Counter()
-                              for label in self.legalLabels}
-        for features, label in zip(trainingData, trainingLabels):
-            self.featureCounts[label] += features
+    # Count the features for each label in the training set
+        self.featureCounts = {}
+        for label in self.legalLabels:
+            self.featureCounts[label] = util.Counter()
 
-        # Store the total number of training instances
-        self.dataCount = len(trainingData)
+        for features, label in zip(trainingData, trainingLabels):
+            self.featureCounts[label] += util.Counter(features)
+
     def classify(self, testData):
         """
         Classify the data based on the posterior distribution over labels.
