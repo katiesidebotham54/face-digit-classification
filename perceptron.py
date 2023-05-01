@@ -20,7 +20,6 @@ class PerceptronClassifier:
         self.max_iterations = max_iterations
         self.weights = {}
         for label in legalLabels:
-            # this is the data-structure you should use
             self.weights[label] = util.Counter()
         print("Legal Labels:", self.legalLabels)
 

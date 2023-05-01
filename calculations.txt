@@ -1,0 +1,27 @@
+mira
+
+Data: faces
+10%: [77.0, 64.0, 77.0, 73.0, 81.0]  Accuracy: 74.4  Standard Deviation: 6.465291950097845
+20%: [82.0, 77.0, 86.0, 84.0, 83.0]  Accuracy: 82.4  Standard Deviation: 3.361547262794322
+30%: [67.0, 69.0, 74.0, 79.0, 86.0]  Accuracy: 75.0  Standard Deviation: 7.713624310270756
+40%: [83.0, 85.0, 80.0, 84.0, 83.0]  Accuracy: 83.0  Standard Deviation: 1.8708286933869707
+No data for 50%
+No data for 60%
+No data for 70%
+No data for 80%
+No data for 90%
+No data for 100%
+------------------
+
+Data: digits
+No data for 10%
+No data for 20%
+No data for 30%
+No data for 40%
+No data for 50%
+No data for 60%
+No data for 70%
+No data for 80%
+No data for 90%
+No data for 100%
+------------------

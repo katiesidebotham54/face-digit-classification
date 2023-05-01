@@ -1,32 +1,13 @@
 # naiveBayes.py
 # -------------
-# Licensing Information: Please do not distribute or publish solutions to this
-# project. You are free to use and extend these projects for educational
-# purposes. The Pacman AI projects were developed at UC Berkeley, primarily by
-# John DeNero (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
-# For more info, see http://inst.eecs.berkeley.edu/~cs188/sp09/pacman.html
-
 import util
 import classificationMethod
 import math
-import collections
-from typing import List, Dict, Any
 
 
-def accuracy_score(y_true, y_pred):
-            correct = 0
-            total = len(y_true)
-            for i in range(total):
-                if y_true[i] == y_pred[i]:
-                    correct += 1
-            return correct / total
-        
 class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     """
-    See the project description for the specifications of the Naive Bayes classifier.
-
-    Note that the variable 'datum' in this code refers to a counter of features
-    (not to a raw samples.Datum).
+    NB Classifier assumes that the features in the input data are conditionally independent given the label.
     """
 
     def __init__(self, legalLabels):
@@ -45,11 +26,8 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
 
     def train(self, trainingData, trainingLabels, validationData, validationLabels):
         """
-        Outside shell to call your method. Do not modify this method.
+        Outside shell to call your method
         """
-
-        # might be useful in your code later...
-        # this is a list of all features in the training set.
         trainingData = list(trainingData)
         self.features = list(
             set([f for datum in trainingData for f in list(datum.keys())]))
@@ -61,7 +39,7 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
 
         self.trainAndTune(trainingData, trainingLabels,
                           validationData, validationLabels, kgrid)
-    
+
     def trainAndTune(self, trainingData, trainingLabels, validationData, validationLabels, kgrid):
         """
         Trains the classifier by collecting counts over the training data, and
@@ -75,57 +53,62 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
         To get the list of all possible features or labels, use self.features and 
         self.legalLabels.
         """
-        # Count the labels in the training set
-        self.count_labels = util.Counter()
+        # Used to count the number of times each label appears in the training set
+        self.label_count = util.Counter()
         self.dataCount = len(trainingLabels)
 
         for label in trainingLabels:
-            self.count_labels[label] += 1
+            self.label_count[label] += 1
 
-    # Count the features for each label in the training set
+        # Count the features for each label in the training set
+        # Initialize dictionary to keep track of number of times each feature appears in each label
         self.featureCounts = {}
+        # Create a counter for each possible label (0-9)
         for label in self.legalLabels:
             self.featureCounts[label] = util.Counter()
 
+        # Increments the counts for each feature in the Counter object corresponding to the datum's label
         for features, label in zip(trainingData, trainingLabels):
             self.featureCounts[label] += util.Counter(features)
 
     def classify(self, testData):
         """
         Classify the data based on the posterior distribution over labels.
-    
+
         You shouldn't modify this method.
         """
         guesses = []
-        self.posteriors = [] # Log posteriors are stored for later data analysis (autograder).
+        # Log posteriors are stored for later data analysis (autograder).
+        self.posteriors = []
         for datum in testData:
             posterior = self.calculateLogJointProbabilities(datum)
             guesses.append(posterior.argMax())
             self.posteriors.append(posterior)
         return guesses
+
     def calculateLogJointProbabilities(self, datum):
         """
         Returns the log-joint distribution over legal labels and the datum.
         Each log-probability should be stored in the log-joint counter, e.g.    
         logJoint[3] = <Estimate of log( P(Label = 3, datum) )>
-    
+
         To get the list of all possible features or labels, use self.features and 
         self.legalLabels.
         """
         logJoint = util.Counter()
-    
+
         for label in self.legalLabels:
-                priorProb_Labels = math.log(
-                    self.count_labels[label] / self.dataCount)
+            priorProb_Labels = math.log(
+                self.label_count[label] / self.dataCount)
 
-                featureProb_givenLabel = 0
-                for feature, value in datum.items():
-                    true_count = self.featureCounts[label][feature] + self.k
-                    false_count = self.count_labels[label] - \
-                        self.featureCounts[label][feature] + self.k
-                    denominator = true_count + false_count
+            featureProb_givenLabel = 0
+            for feature, value in datum.items():
+                true_count = self.featureCounts[label][feature] + self.k
+                false_count = self.label_count[label] - \
+                    self.featureCounts[label][feature] + self.k
+                denominator = true_count + false_count
 
-                    featureProb_givenLabel += math.log(
-                        (true_count / denominator) if value else (false_count / denominator))
-                logJoint[label] = priorProb_Labels + featureProb_givenLabel
+                featureProb_givenLabel += math.log(
+                    (true_count / denominator) if value else (false_count / denominator))
+            logJoint[label] = priorProb_Labels + featureProb_givenLabel
         return logJoint

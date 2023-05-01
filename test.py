@@ -65,7 +65,7 @@ if run_mira:
             subprocess.call(
                 f"python dataClassifier.py -c mira -d faces -t {amount} >> results.txt", shell=True)
         end_faces = datetime.datetime.now()
-        print(f"{(end_digits - start_digits).total_seconds()} seconds")
+        print(f"{(end_faces - start_faces).total_seconds()} seconds")
 
     for amount in digits:
         start_digits = datetime.datetime.now()
