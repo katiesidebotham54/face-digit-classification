@@ -1,7 +1,6 @@
 import subprocess
 import datetime
 import random
-from dataClassifier import trainingData
 
 # clear results.txt file
 with open('nb_results.txt', 'w') as file:
@@ -17,9 +16,6 @@ for amount in faces:
     start_faces = datetime.datetime.now()
     for i in range(iterations):
         print(f"Running Naive Bayes Faces: {amount}")
-        # Assuming the trainingData is a list of data points
-        n_samples = int(amount * len(trainingData))  # Select 10% of the data
-        random_samples = random.sample(trainingData, n_samples)
         subprocess.call(
             f"python dataClassifier.py -c naiveBayes -d faces -t {amount} >> nb_results.txt", shell=True)
     end_faces = datetime.datetime.now()

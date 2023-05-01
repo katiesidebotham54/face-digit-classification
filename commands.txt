@@ -11,5 +11,6 @@ python dataClassifier.py -c nb
 python dataClassifier.py -d faces -c nb -k 1
 python dataClassifier.py -c mira
 python dataClassifier.py -d faces -c mira
-
-
+python calculations.py mira mira_results.txt 5 
+python calculations.py perceptron perceptron_results.txt 5 
+python calculations.py nb nb_results.txt 5 

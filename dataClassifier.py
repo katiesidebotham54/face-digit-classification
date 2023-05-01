@@ -7,6 +7,7 @@ import samples
 import sys
 import util
 import mira
+import random
 
 TEST_SET_SIZE = 100
 DIGIT_DATUM_WIDTH = 28
@@ -264,6 +265,10 @@ def runClassifier(args, options):
     trainingData = map(featureFunction, rawTrainingData)
     validationData = map(featureFunction, rawValidationData)
     testData = map(featureFunction, rawTestData)
+
+    # Randomize training data
+    trainingData = list(trainingData)  # Convert to list
+    random.shuffle(trainingData)  # Randomize order of elements
 
     # Conduct training and testing
     print("Training...")
