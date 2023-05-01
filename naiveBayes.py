@@ -27,7 +27,6 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
         self.k = 1  # this is the smoothing parameter, ** use it in your train method **
         # Look at this flag to decide whether to choose k automatically ** use this in your train method **
         self.automaticTuning = False
-        print("Legal Labels:", self.legalLabels)
 
     def setSmoothing(self, k):
         """
@@ -82,40 +81,42 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
 
         # Store the total number of training instances
         self.dataCount = len(trainingData)
-
     def classify(self, testData):
         """
         Classify the data based on the posterior distribution over labels.
-
+    
         You shouldn't modify this method.
         """
         guesses = []
-        # Log posteriors are stored for later data analysis (autograder).
-        self.posteriors = []
+        self.posteriors = [] # Log posteriors are stored for later data analysis (autograder).
         for datum in testData:
-            logJoint = util.Counter()
-            for label in self.legalLabels:
+            posterior = self.calculateLogJointProbabilities(datum)
+            guesses.append(posterior.argMax())
+            self.posteriors.append(posterior)
+        return guesses
+    def calculateLogJointProbabilities(self, datum):
+        """
+        Returns the log-joint distribution over legal labels and the datum.
+        Each log-probability should be stored in the log-joint counter, e.g.    
+        logJoint[3] = <Estimate of log( P(Label = 3, datum) )>
+    
+        To get the list of all possible features or labels, use self.features and 
+        self.legalLabels.
+        """
+        logJoint = util.Counter()
+    
+        for label in self.legalLabels:
                 priorProb_Labels = math.log(
                     self.count_labels[label] / self.dataCount)
 
                 featureProb_givenLabel = 0
                 for feature, value in datum.items():
-                    trueCount = self.featureCounts[label][feature] + self.k
-                    falseCount = self.count_labels[label] - \
+                    true_count = self.featureCounts[label][feature] + self.k
+                    false_count = self.count_labels[label] - \
                         self.featureCounts[label][feature] + self.k
-                    denominator = trueCount + falseCount
+                    denominator = true_count + false_count
 
-                    if value:
-                        featureProb_givenLabel += math.log(
-                            trueCount / denominator)
-                    else:
-                        featureProb_givenLabel += math.log(
-                            falseCount / denominator)
-
+                    featureProb_givenLabel += math.log(
+                        (true_count / denominator) if value else (false_count / denominator))
                 logJoint[label] = priorProb_Labels + featureProb_givenLabel
-
-            posterior = logJoint
-            guesses.append(posterior.argMax())
-            self.posteriors.append(posterior)
-
-        return guesses
+        return logJoint

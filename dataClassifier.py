@@ -7,7 +7,6 @@ import samples
 import sys
 import util
 import mira
-import knn
 
 TEST_SET_SIZE = 100
 DIGIT_DATUM_WIDTH = 28
