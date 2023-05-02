@@ -1,3 +1,5 @@
+# This file is used to test mira.py on faces and digits data
+
 import subprocess
 import datetime
 
@@ -11,7 +13,6 @@ digits = [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000]
 iterations = 5
 
 # Run Mira
-
 for amount in faces:
     start_faces = datetime.datetime.now()
     for i in range(iterations):

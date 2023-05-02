@@ -1,3 +1,5 @@
+# This file is used to test pereceptron.py on faces and digits data
+
 import subprocess
 import datetime
 

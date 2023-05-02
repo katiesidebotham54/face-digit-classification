@@ -1,3 +1,5 @@
+# This file is used to test all three classifiers on faces and digits datasets
+
 import subprocess
 import datetime
 

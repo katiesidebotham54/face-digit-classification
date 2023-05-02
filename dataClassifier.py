@@ -1,6 +1,5 @@
 # dataClassifier.py
 
-import mostFrequent
 import naiveBayes
 import perceptron
 import samples
@@ -129,7 +128,7 @@ def readCommand(argv):
     parser = OptionParser(USAGE_STRING)
 
     parser.add_option('-c', '--classifier', help=default('The type of classifier'), choices=[
-                      'mostFrequent', 'nb', 'naiveBayes', 'perceptron', 'mira'], default='mostFrequent')
+                      'nb', 'naiveBayes', 'perceptron', 'mira'], default='nb')
     parser.add_option('-d', '--data', help=default('Dataset to use'),
                       choices=['digits', 'faces'], default='digits')
     parser.add_option(
@@ -188,9 +187,7 @@ def readCommand(argv):
         print(USAGE_STRING)
         sys.exit(2)
 
-    if (options.classifier == "mostFrequent"):
-        classifier = mostFrequent.MostFrequentClassifier(legalLabels)
-    elif (options.classifier == "naiveBayes" or options.classifier == "nb"):
+    if (options.classifier == "naiveBayes" or options.classifier == "nb"):
         classifier = naiveBayes.NaiveBayesClassifier(legalLabels)
         print(options.smoothing)
         classifier.setSmoothing(options.smoothing)
@@ -217,7 +214,7 @@ def readCommand(argv):
 USAGE_STRING = """
   USAGE:      python dataClassifier.py <options>
   EXAMPLES:   (1) python dataClassifier.py
-                  - trains the default mostFrequent classifier on the digit dataset
+                  - trains the default naiveBayes classifier on the digit dataset
                   using the default 100 training examples and
                   then test the classifier on test data
                  """

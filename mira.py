@@ -16,7 +16,7 @@ class MiraClassifier:
         self.legalLabels = legalLabels
         self.type = "mira"
         self.automaticTuning = False
-        self.C = 0.001
+        self.C = 0.002
         self.legalLabels = legalLabels
         self.max_iterations = max_iterations
         self.initializeWeightsToZero()
@@ -52,25 +52,43 @@ class MiraClassifier:
         datum is a counter from features to values for those features
         representing a vector of values.
         """
-        "*** YOUR CODE HERE ***"
+        # Iterate over each value of C in Cgrid
         for C in Cgrid:
+            # Copy the initial weights
             weights = self.weights.copy()
+            # Iterate over the training data for a maximum number of iterations
             for iteration in range(self.max_iterations):
                 print("Starting iteration ", iteration, "...")
                 for i in range(len(trainingData)):
+                    # Get the current datum and calculate scores for each possible label
                     datum = trainingData[i]
                     scores = util.Counter()
                     for label in self.legalLabels:
                         scores[label] = weights[label] * datum
-                    if scores.argMax() != trainingData[i]:
-                        scale_fact = min(
-                            C, ((weights[scores.argMax()] - weights[trainingLabels[i]]) * datum + 1.0) / (2.0 * (datum * datum)))
+                    # Check if the current guess is correct, and if not, update the weights
+                    if scores.argMax() != trainingLabels[i]:
+                        # Calculate the scaling factor for the update
+                        scale_fact = min(C, ((weights[scores.argMax(
+                        )] - weights[trainingLabels[i]]) * datum + 1.0) / (2.0 * (datum * datum)))
+                        # Calculate the delta to update the weights
                         delta = datum.copy()
                         for feature in delta:
                             delta[feature] *= scale_fact
+                        # Update the weights for the correct and incorrect labels
                         weights[trainingLabels[i]] += delta
                         weights[scores.argMax()] -= delta
 
+            # Evaluate the accuracy of the weights on the validation data
+            guesses = self.classify(validationData)
+            correct = [guesses[i] == validationLabels[i]
+                       for i in range(len(validationLabels))]
+            accuracy = sum(correct) / len(correct)
+            # If the accuracy is better than previous weights, update the weights
+            if accuracy > self.best_accuracy:
+                self.best_accuracy = accuracy
+                self.weights = weights
+
+        # Store the best weights
         self.weights = weights
 
     def classify(self, data):

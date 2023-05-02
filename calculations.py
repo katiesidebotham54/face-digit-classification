@@ -1,3 +1,5 @@
+# This file is used to calculate the mean and standard deviation from test results files
+
 import sys
 import statistics
 

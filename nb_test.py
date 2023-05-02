@@ -1,3 +1,6 @@
+# This file is used to test naiveBayes.py on faces and digits data
+
+
 import subprocess
 import datetime
 

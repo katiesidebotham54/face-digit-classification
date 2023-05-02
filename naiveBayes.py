@@ -26,7 +26,7 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
 
     def train(self, trainingData, trainingLabels, validationData, validationLabels):
         """
-        Outside shell to call your method
+        Outside shell to call your method. Sets the features based on trainingData
         """
         trainingData = list(trainingData)
 
@@ -61,7 +61,6 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
         for label in trainingLabels:
             self.label_count[label] += 1
 
-        # Count the features for each label in the training set
         # Initialize dictionary to keep track of number of times each feature appears in each label
         self.featureCounts = {}
         # Create a counter for each possible label (0-9)
@@ -96,20 +95,27 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
         To get the list of all possible features or labels, use self.features and 
         self.legalLabels.
         """
-        logJoint = util.Counter()
+        logJoint = util.Counter(
+        )  # Initialize an empty counter to store the log-joint probabilities for each label
 
-        for label in self.legalLabels:
+        for label in self.legalLabels:  # Iterate over all the possible labels
             priorProb_Labels = math.log(
-                self.label_count[label] / self.dataCount)
+                self.label_count[label] / self.dataCount)  # Calculate the prior probability of the label using its count in the training data
 
-            featureProb_givenLabel = 0
-            for feature, value in datum.items():
+            featureProb = 0  # store the log-probability of each feature given the label
+            for feature, value in datum.items():  # Iterate over all the features in the given datum
+                # Calculate the number of times the feature appears in the label with Laplace smoothing
                 true_count = self.featureCounts[label][feature] + self.k
                 false_count = self.label_count[label] - \
-                    self.featureCounts[label][feature] + self.k
-                denominator = true_count + false_count
+                    self.featureCounts[label][feature] + \
+                    self.k  # Calculate the number of times the feature does not appear in the label with Laplace smoothing
+                # Calculate the denom of the conditional probability expression
+                denom = true_count + false_count
 
-                featureProb_givenLabel += math.log(
-                    (true_count / denominator) if value else (false_count / denominator))
-            logJoint[label] = priorProb_Labels + featureProb_givenLabel
+                # Calculate the log-probability of the feature given the label, using Laplace smoothing
+                featureProb += math.log(
+                    (true_count / denom) if value else (false_count / denom))
+            # Calculate the log-joint probability of the label for the given datum
+            logJoint[label] = priorProb_Labels + featureProb
+        # Return the counter containing the log-joint probabilities for all the labels
         return logJoint
