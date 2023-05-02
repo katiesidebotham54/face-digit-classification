@@ -18,8 +18,7 @@ for amount in faces:
         subprocess.call(
             f"python dataClassifier.py -c naiveBayes -d faces -t {amount} >> nb_results.txt", shell=True)
     end_faces = datetime.datetime.now()
-    with open('nb_results.txt', 'a') as file:
-            file.write(f"{(end_faces - start_faces).total_seconds()} seconds\n")
+    print(f"{(end_faces - start_faces).total_seconds()} seconds")
 
 for amount in digits:
     start_digits = datetime.datetime.now()
@@ -28,5 +27,4 @@ for amount in digits:
         subprocess.call(
             f"python dataClassifier.py -c naiveBayes -d digits -t {amount}  >> nb_results.txt", shell=True)
     end_digits = datetime.datetime.now()
-    with open('nb_results.txt', 'a') as file:
-        file.write(f"{(end_digits - start_digits).total_seconds()} seconds\n")
+    print(f"{(end_digits - start_digits).total_seconds()} seconds")
