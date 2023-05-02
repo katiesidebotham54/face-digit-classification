@@ -19,11 +19,11 @@ python calculations.py nb nb_results.txt 5
 
 
  // FOR TA TESTING
-python dataClassifier.py -c nb -d digits -t 1
-python dataClassifier.py -c nb -d faces -t 1
+python dataClassifier.py -c nb -d digits -s 1
+python dataClassifier.py -c nb -d faces -s 1
 
-python dataClassifier.py -c perceptron -d digits -t 1
-python dataClassifier.py -c perceptron -d faces -t 1
+python dataClassifier.py -c perceptron -d digits -s 1
+python dataClassifier.py -c perceptron -d faces -s 1
 
-python dataClassifier.py -c mira -d digits -t 1
-python dataClassifier.py -c mira -d faces -t 1
+python dataClassifier.py -c mira -d digits -s 1
+python dataClassifier.py -c mira -d faces -s 1
