@@ -13,7 +13,7 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
     def __init__(self, legalLabels):
         self.legalLabels = legalLabels
         self.type = "naivebayes"
-        self.k = 1  # this is the smoothing parameter, ** use it in your train method **
+        self.k = 0.1  # this is the smoothing parameter, ** use it in your train method **
         # Look at this flag to decide whether to choose k automatically ** use this in your train method **
         self.automaticTuning = False
 
@@ -29,6 +29,7 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
         Outside shell to call your method
         """
         trainingData = list(trainingData)
+
         self.features = list(
             set([f for datum in trainingData for f in list(datum.keys())]))
 

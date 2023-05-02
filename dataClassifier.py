@@ -8,6 +8,7 @@ import sys
 import util
 import mira
 import random
+from collections import defaultdict
 
 TEST_SET_SIZE = 100
 DIGIT_DATUM_WIDTH = 28
@@ -237,6 +238,7 @@ def runClassifier(args, options):
     if (options.data == "faces"):
         rawTrainingData = samples.loadDataFile(
             "facedata/facedatatrain", numTraining, FACE_DATUM_WIDTH, FACE_DATUM_HEIGHT)
+        print("training data: " + str(numTraining))
         trainingLabels = samples.loadLabelsFile(
             "facedata/facedatatrainlabels", numTraining)
         rawValidationData = samples.loadDataFile(
@@ -260,32 +262,42 @@ def runClassifier(args, options):
             "digitdata/testimages", numTest, DIGIT_DATUM_WIDTH, DIGIT_DATUM_HEIGHT)
         testLabels = samples.loadLabelsFile("digitdata/testlabels", numTest)
 
+    # Split data and labels
+    trainingPairs = list(zip(rawTrainingData, trainingLabels))
+    validationPairs = list(zip(rawValidationData, validationLabels))
+    testPairs = list(zip(rawTestData, testLabels))
+
+    # Randomize training pairs
+    random.shuffle(trainingPairs)
+    random.shuffle(validationPairs)
+    random.shuffle(testPairs)
+
+    # Unzip shuffled pairs
+    shuffledTrainingData, shuffledTrainingLabels = zip(*trainingPairs)
+    shuffledValidationData, shuffledValidationLabels = zip(*validationPairs)
+    shuffledTestData, shuffledTestLabels = zip(*testPairs)
     # Extract features
     print("Extracting features...")
-    trainingData = map(featureFunction, rawTrainingData)
-    validationData = map(featureFunction, rawValidationData)
-    testData = map(featureFunction, rawTestData)
-
-    # Randomize training data
-    trainingData = list(trainingData)  # Convert to list
-    random.shuffle(trainingData)  # Randomize order of elements
+    trainingData = map(featureFunction, shuffledTrainingData)
+    validationData = map(featureFunction, shuffledValidationData)
 
     # Conduct training and testing
+    testData = map(featureFunction, shuffledTestData)
     print("Training...")
-    classifier.train(trainingData, trainingLabels,
-                     validationData, validationLabels)
+    classifier.train(trainingData, shuffledTrainingLabels,
+                     validationData, shuffledValidationLabels)
     print("Validating...")
     guesses = classifier.classify(validationData)
     correct = [guesses[i] == validationLabels[i]
-               for i in range(len(validationLabels))].count(True)
-    print(str(correct), ("correct out of " + str(len(validationLabels)) +
-          " (%.1f%%).") % (100.0 * correct / len(validationLabels)))
+               for i in range(len(shuffledValidationLabels))].count(True)
+    print(str(correct), ("correct out of " + str(len(shuffledValidationLabels)) +
+          " (%.1f%%).") % (100.0 * correct / len(shuffledValidationLabels)))
     print("Testing...")
     guesses = classifier.classify(testData)
-    correct = [guesses[i] == testLabels[i]
+    correct = [guesses[i] == shuffledTestLabels[i]
                for i in range(len(testLabels))].count(True)
-    print(str("Test_Percent: "), (correct), ("correct out of " + str(len(testLabels)) +
-          " (%.1f%%).") % (100.0 * correct / len(testLabels)))
+    print(str("Test_Percent: "), (correct), ("correct out of " + str(len(shuffledTestLabels)) +
+          " (%.1f%%).") % (100.0 * correct / len(shuffledTestLabels)))
     analysis(classifier, guesses, testLabels,
              testData, rawTestData, printImage)
 

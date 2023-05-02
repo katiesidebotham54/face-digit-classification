@@ -1,6 +1,5 @@
 import subprocess
 import datetime
-import random
 
 # clear results.txt file
 with open('nb_results.txt', 'w') as file:
