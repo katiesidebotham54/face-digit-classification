@@ -1,27 +1,27 @@
-nb
+mira
 
 Data: faces
-10%: [54.0, 54.0, 54.0, 54.0, 54.0]  Accuracy: 54.0  Standard Deviation: 0.0
-20%: [82.0, 82.0, 82.0, 82.0, 82.0]  Accuracy: 82.0  Standard Deviation: 0.0
-30%: [84.0, 84.0, 84.0, 84.0, 84.0]  Accuracy: 84.0  Standard Deviation: 0.0
-40%: [85.0, 85.0, 85.0, 85.0, 85.0]  Accuracy: 85.0  Standard Deviation: 0.0
-50%: [83.0, 83.0, 83.0, 83.0, 83.0]  Accuracy: 83.0  Standard Deviation: 0.0
-60%: [85.0, 85.0, 85.0, 85.0, 85.0]  Accuracy: 85.0  Standard Deviation: 0.0
-70%: [86.0, 86.0, 86.0, 86.0, 86.0]  Accuracy: 86.0  Standard Deviation: 0.0
-80%: [87.0, 87.0, 87.0, 87.0, 87.0]  Accuracy: 87.0  Standard Deviation: 0.0
-90%: [88.0, 88.0, 88.0, 88.0, 88.0]  Accuracy: 88.0  Standard Deviation: 0.0
-100%: [88.0, 88.0, 88.0, 88.0, 88.0]  Accuracy: 88.0  Standard Deviation: 0.0
+10%: [77.0, 61.0, 61.0, 71.0, 70.0]  Accuracy: 68.0  Standard Deviation: 6.928203230275509
+20%: [81.0, 80.0, 81.0, 81.0, 69.0]  Accuracy: 78.4  Standard Deviation: 5.272570530585627
+30%: [71.0, 76.0, 80.0, 74.0, 83.0]  Accuracy: 76.8  Standard Deviation: 4.764451699828638
+40%: [89.0, 81.0, 81.0, 77.0, 85.0]  Accuracy: 82.6  Standard Deviation: 4.560701700396552
+50%: [80.0, 79.0, 74.0, 79.0, 85.0]  Accuracy: 79.4  Standard Deviation: 3.9115214431215892
+60%: [85.0, 81.0, 79.0, 86.0, 77.0]  Accuracy: 81.6  Standard Deviation: 3.847076812334269
+70%: [79.0, 83.0, 77.0, 75.0, 83.0]  Accuracy: 79.4  Standard Deviation: 3.5777087639996634
+80%: [84.0, 86.0, 82.0, 92.0, 86.0]  Accuracy: 86.0  Standard Deviation: 3.7416573867739413
+90%: [86.0, 86.0, 82.0, 83.0, 86.0]  Accuracy: 84.6  Standard Deviation: 1.9493588689617927
+100%: [87.0, 86.0, 80.0, 85.0, 83.0]  Accuracy: 84.2  Standard Deviation: 2.7748873851023217
 ------------------
 
 Data: digits
-10%: [75.0, 75.0, 75.0]  Accuracy: 75.0  Standard Deviation: 0.0
-No data for 20%
-No data for 30%
-No data for 40%
-No data for 50%
-No data for 60%
-No data for 70%
-No data for 80%
-No data for 90%
-No data for 100%
+10%: [68.0, 79.0, 79.0, 81.0, 75.0]  Accuracy: 76.4  Standard Deviation: 5.176871642217914
+20%: [81.0, 80.0, 79.0, 74.0, 70.0]  Accuracy: 76.8  Standard Deviation: 4.658325879540846
+30%: [68.0, 82.0, 72.0, 81.0, 83.0]  Accuracy: 77.2  Standard Deviation: 6.760177512462229
+40%: [74.0, 84.0, 77.0, 75.0, 79.0]  Accuracy: 77.8  Standard Deviation: 3.96232255123179
+50%: [85.0, 81.0, 80.0, 77.0, 79.0]  Accuracy: 80.4  Standard Deviation: 2.9664793948382653
+60%: [75.0, 79.0, 79.0, 78.0, 71.0]  Accuracy: 76.4  Standard Deviation: 3.4351128074635335
+70%: [86.0, 90.0, 76.0, 80.0, 82.0]  Accuracy: 82.8  Standard Deviation: 5.403702434442518
+80%: [84.0, 81.0, 74.0, 76.0, 79.0]  Accuracy: 78.8  Standard Deviation: 3.96232255123179
+90%: [78.0, 86.0, 86.0, 89.0, 77.0]  Accuracy: 83.2  Standard Deviation: 5.357238094391549
+100%: [75.0, 78.0, 84.0, 85.0, 71.0]  Accuracy: 78.6  Standard Deviation: 5.941380311005179
 ------------------

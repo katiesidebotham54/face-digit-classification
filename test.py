@@ -22,7 +22,7 @@ if run_nb:
         for i in range(iterations):
             print(f"Running Naive Bayes Faces: {amount}")
             subprocess.call(
-                f"python dataClassifier.py -c naiveBayes -d faces -t {amount} >> results.txt", shell=True)
+                f"python dataClassifier.py -c naiveBayes -d faces -t {amount} -i {iterations} >> results.txt", shell=True)
         end_faces = datetime.datetime.now()
         print(f"{(end_faces - start_faces).total_seconds()} seconds")
 
@@ -31,7 +31,7 @@ if run_nb:
         for i in range(iterations):
             print(f"Running Naive Bayes Digits: {amount}")
             subprocess.call(
-                f"python dataClassifier.py -c naiveBayes -d digits -t {amount}  >> results.txt", shell=True)
+                f"python dataClassifier.py -c naiveBayes -d digits -t {amount}  -i {iterations}  >> results.txt", shell=True)
         end_digits = datetime.datetime.now()
         print(f"{(end_digits - start_digits).total_seconds()} seconds")
 
@@ -42,7 +42,7 @@ if run_perceptron:
         for i in range(iterations):
             print(f"Running Perceptron Faces: {amount}")
             subprocess.call(
-                f"python dataClassifier.py -c perceptron -d faces -t {amount} >> results.txt", shell=True)
+                f"python dataClassifier.py -c perceptron -d faces -t {amount}  -i {iterations} >> results.txt", shell=True)
         end_faces = datetime.datetime.now()
         print(f"{(end_faces - start_faces).total_seconds()} seconds")
 
@@ -51,7 +51,7 @@ if run_perceptron:
         for i in range(iterations):
             print(f"Running Perceptron Digits: {amount}")
             subprocess.call(
-                f"python dataClassifier.py -c perceptron -d digits -t {amount} >> results.txt", shell=True)
+                f"python dataClassifier.py -c perceptron -d digits -t {amount}  -i {iterations} >> results.txt", shell=True)
         end_digits = datetime.datetime.now()
         print(f"{(end_digits - start_digits).total_seconds()} seconds")
 
@@ -63,7 +63,7 @@ if run_mira:
         for i in range(iterations):
             print(f"Running Mira Faces: {amount}")
             subprocess.call(
-                f"python dataClassifier.py -c mira -d faces -t {amount} >> results.txt", shell=True)
+                f"python dataClassifier.py -c mira -d faces -t {amount}  -i {iterations}>> results.txt", shell=True)
         end_faces = datetime.datetime.now()
         print(f"{(end_faces - start_faces).total_seconds()} seconds")
 
@@ -72,6 +72,6 @@ if run_mira:
         for i in range(iterations):
             print(f"Running Mira Digits: {amount}")
             subprocess.call(
-                f"python dataClassifier.py -c mira -d digits -t {amount} >> results.txt", shell=True)
+                f"python dataClassifier.py -c mira -d digits -t {amount}  -i {iterations} >> results.txt", shell=True)
         end_digits = datetime.datetime.now()
         print(f"{(end_digits - start_digits).total_seconds()} seconds")
